@@ -1,0 +1,23 @@
+1. Minimum RTO for a single AZ outage: 1-2 minutes
+
+From AWS Multi-AZ documentation, we ca conclude that the time to complete switching to a different AZ is between 60 to 120 seconds.
+Documentation: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html
+
+2. Minimum RTO for a single region outage: 50-60 minutes
+If a complete region outage occurs, the following scenario may happen:
+- 02:00 AM: a problem happened to the region (0 minutes).
+- 02:03 AM: the alert is triggered after 3 minutes of discovering the problem (3 minutes).
+- 02:20 AM: the support is alerted, got up from his bed, reached the computer, and logged into the system (20 minutes).
+- 02:30 AM: Root cause is known by the support engineer (10 minutes).
+- 02:35 AM: Started solving the problem by promoting the secondary DB to be the master DB and routing the traffic to it (5 minutes).
+- 02:50 AM: the solution is completed and all is OK (15 minutes).
+
+The total needed time is: 50 minutes
+
+3. Minimum RPO for a single AZ outage: 0 Minutes
+
+Since the primary database is a synchronous standby copy with the Multi-AZ setup, there would be no data loss.
+
+4. Minimum RPO for a single region outage
+
+The RPO will depend on how frequently data is backed up if we configure an RDS database with automated backups turned on. The minimum RPO will be 4 hours if we set up backups every 4 hours.
