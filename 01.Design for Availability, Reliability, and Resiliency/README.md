@@ -3,10 +3,10 @@
 This project is part of the Udacity Cloud Architect Nanodegree.
 
 The goal of this project is to :
-- Build a Multi-AvailabilityZone, Multi-Region database and show how to use it in multiple geographically separate AWS regions.  
+- Build a Multi-AvailabilityZone, Multi-Region database and show how to use it in multiple geographically separate AWS regions.
 - Build a website hosting solution that is versioned so that any data destruction and accidents can be quickly and easily undone.
 
-Here is a visualisation of the Cloud Architecture I set up for this project using [Lucid Chart](https://www.lucidchart.com):
+Here is a visualisation of the Cloud Architecture for this project using [Lucid Chart](https://www.lucidchart.com):
 ![AWS Diagram](screenshots/diagram.png "AWS Diagram")
 
 The instructions for this project are available [here](https://github.com/udacity/nd063-c2-design-for-availability-resilience-reliability-replacement-project-starter-template).
@@ -66,25 +66,26 @@ After the primary database has been set up, I created a read replica database in
 Description of Achievable Recovery Time Objective (RTO) and Recovery Point Objective (RPO) for this Multi-AZ, multi-region database in terms of:
 
 1. Minimum RTO for a single AZ outage 
-If a multi-AZ configuration is set up, the fail over to another AZ will happen automatically which can take a few minutes.
+From AWS Multi-AZ documentation, we ca conclude that the time to complete switching to a different AZ is between 60 to 120 seconds.
+
+	Documentation:  https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html
     
 2. Minimum RTO for a single region outage
-- 00:00 - Problem happens (0 minutes) 
-- 00:05 - An amount of time passes before an alert triggers (5 minutes) 
-- 00:06 - Alert triggers on-all staff (1 minute) 
-- 00:16 - On-call staff may need to get out of bed, get to computer, log in, log onto VPN (10 minutes) 
-- 00:26 - On-call staff starts diagnosing issue (10 minutes) 
-- 00:41 - Root cause is discovered (15 minutes) 
-- 00:46 - Remediation started (5 minutes) :  Promote secondary instance to be the new master and then route the traffic to the new endpoint
-- 00:56 - Remediation completed (10 minutes) 
-Total time: 56 minutes 
+If a complete region outage occurs, the following scenario may happen:
+- 02:00 AM: a problem happened to the region (0 minutes).
+- 02:03 AM: the alert is triggered after 3 minutes of discovering the problem (3 minutes).
+- 02:20 AM: the support is alerted, got up from his bed, reached the computer, and logged into the system (20 minutes).
+- 02:30 AM: Root cause is known by the support engineer (10 minutes).
+- 02:35 AM: Started solving the problem by promoting the secondary DB to be the master DB and routing the traffic to it (5 minutes).
+- 02:50 AM: the solution is completed and all is OK (15 minutes).
+
+The total needed time is: 50 minutes
 
 3. Minimum RPO for a single AZ outage
-As it only takes a few minutes to fail over to another AZ, a few minutes of data will be lost.   
+Since the primary database is a synchronous standby copy with the Multi-AZ setup, there would be no data loss.
        
 4. Minimum RPO for a single region outage 
-If we set up an RDS database with automatic backups enabled, the RPO will be based on how often data is backed up. If we set up a backup every 4 hours, the minimun RPO will be 4 hours.
-
+The RPO will depend on how frequently data is backed up if we configure an RDS database with automated backups turned on. The minimum RPO will be 4 hours if we set up backups every 4 hours.
 
 ### Demonstrate normal usage
 
@@ -103,7 +104,80 @@ mysql -u admin -p -h {PRIMARY_DATABASE_ENDPOINT}
 ```
 
 Log of connecting to the database, creating the table, writing to and reading from the table:
-![Log Primary](screenshots/log_primary.png "Log Primary")
+
+	    ubuntu@ip-10-4-15-158:~$ mysql -u admin -p -h ud-primary.cyehns0bq166.us-east-1.rds.amazonaws.com -P 3306
+	Enter password: 
+	Welcome to the MySQL monitor.  Commands end with ; or \g.
+	Your MySQL connection id is 43
+	Server version: 8.0.28 Source distribution
+
+	Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+	Oracle is a registered trademark of Oracle Corporation and/or its
+	affiliates. Other names may be trademarks of their respective
+	owners.
+
+	Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+	mysql> show databases;
+	+--------------------+
+	| Database           |
+	+--------------------+
+	| information_schema |
+	| mysql              |
+	| performance_schema |
+	| sys                |
+	| udacity            |
+	+--------------------+
+	5 rows in set (0.00 sec)
+
+	mysql> USE udacity
+	Database changed
+	mysql> SHOW tables;
+	Empty set (0.00 sec)
+
+	mysql> CREATE TABLE Persons (
+	    ->     PersonID int,
+	    ->     LastName varchar(255),
+	    ->     FirstName varchar(255),
+	    ->     Address varchar(255),
+	    ->     City varchar(255)
+	    -> );
+	Query OK, 0 rows affected (0.05 sec)
+
+	mysql> show TABLES;
+	+-------------------+
+	| Tables_in_udacity |
+	+-------------------+
+	| Persons           |
+	+-------------------+
+	1 row in set (0.00 sec)
+
+	mysql> DESCRIBE Persons;
+	+-----------+--------------+------+-----+---------+-------+
+	| Field     | Type         | Null | Key | Default | Extra |
+	+-----------+--------------+------+-----+---------+-------+
+	| PersonID  | int          | YES  |     | NULL    |       |
+	| LastName  | varchar(255) | YES  |     | NULL    |       |
+	| FirstName | varchar(255) | YES  |     | NULL    |       |
+	| Address   | varchar(255) | YES  |     | NULL    |       |
+	| City      | varchar(255) | YES  |     | NULL    |       |
+	+-----------+--------------+------+-----+---------+-------+
+	5 rows in set (0.00 sec)
+
+	mysql> INSERT INTO Persons VALUES (1,'Moustafa','Ahmed','Zagazig','Sharkia');
+	Query OK, 1 row affected (0.01 sec)
+
+	mysql> SELECT * FROM Persons;
+	+----------+----------+-----------+---------+---------+
+	| PersonID | LastName | FirstName | Address | City    |
+	+----------+----------+-----------+---------+---------+
+	|        1 | Moustafa | Ahmed     | Zagazig | Sharkia |
+	+----------+----------+-----------+---------+---------+
+	1 row in set (0.00 sec)
+
+	mysql> 
+
 
 
 ### Monitor database
@@ -125,7 +199,57 @@ Database configuration **before the database promotion:**
 ![DB before promotion](screenshots/rr_before_promotion.png "DB before promotion")
 
 Log of connecting to the database, writing to and reading from the database **before the database promotion:**
-![Log before promotion](screenshots/log_rr_before_promotion.png "Log before promotion")
+
+    ubuntu@ip-10-8-15-129:~$ mysql -u admin -p -h ud-secondary.cptqghrpkxuw.us-west-2.rds.amazonaws.com -P 3306
+    Enter password: 
+    Welcome to the MySQL monitor.  Commands end with ; or \g.
+    Your MySQL connection id is 31
+    Server version: 8.0.28 Source distribution
+    
+    Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+    
+    Oracle is a registered trademark of Oracle Corporation and/or its
+    affiliates. Other names may be trademarks of their respective
+    owners.
+    
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+    
+    mysql> SHOW databases;
+    +--------------------+
+    | Database           |
+    +--------------------+
+    | information_schema |
+    | mysql              |
+    | performance_schema |
+    | sys                |
+    | udacity            |
+    +--------------------+
+    5 rows in set (0.00 sec)
+    
+    mysql> USE udacity;
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
+    
+    Database changed
+    mysql> SHOW tables;
+    +-------------------+
+    | Tables_in_udacity |
+    +-------------------+
+    | Persons           |
+    +-------------------+
+    1 row in set (0.00 sec)
+    
+    mysql> SELECT * FROM Persons;
+    +----------+----------+-----------+---------+---------+
+    | PersonID | LastName | FirstName | Address | City    |
+    +----------+----------+-----------+---------+---------+
+    |        1 | Moustafa | Ahmed     | Zagazig | Sharkia |
+    +----------+----------+-----------+---------+---------+
+    1 row in set (0.00 sec)
+    
+    mysql> INSERT INTO Persons VALUES (2, 'Ibrahim', 'Mohammed', 'Cairo', 'Cairo');
+    ERROR 1290 (HY000): The MySQL server is running with the --read-only option so it cannot execute this statement
+    mysql> 
 
 After promoting the read replica, we can now insert data into and read from the read replica database.
 
@@ -133,8 +257,39 @@ Database configuration **after the database promotion:**
 ![DB after promotion](screenshots/rr_after_promotion.png "DB after promotion")
 
 Log of connecting to the database, writing to and reading from the database **after the database promotion:**
-![Log after promotion](screenshots/log_rr_after_promotion.png "Log after promotion")
 
+    ubuntu@ip-10-8-15-129:~$ mysql -u admin -p -h ud-secondary.cptqghrpkxuw.us-west-2.rds.amazonaws.com -P 3306
+    Enter password: 
+    Welcome to the MySQL monitor.  Commands end with ; or \g.
+    Your MySQL connection id is 9
+    Server version: 8.0.28 Source distribution
+    
+    Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+    
+    Oracle is a registered trademark of Oracle Corporation and/or its
+    affiliates. Other names may be trademarks of their respective
+    owners.
+    
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+    
+    mysql> USE udacity
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
+    
+    Database changed
+    mysql> INSERT INTO Persons VALUES (2, 'Ibrahim', 'Mohammed', 'Cairo', 'Cairo');
+    Query OK, 1 row affected (0.01 sec)
+    
+    mysql> SELECT * FROM Persons;
+    +----------+----------+-----------+---------+---------+
+    | PersonID | LastName | FirstName | Address | City    |
+    +----------+----------+-----------+---------+---------+
+    |        1 | Moustafa | Ahmed     | Zagazig | Sharkia |
+    |        2 | Ibrahim  | Mohammed  | Cairo   | Cairo   |
+    +----------+----------+-----------+---------+---------+
+    2 rows in set (0.00 sec)
+    
+    mysql> 
 
 ### Part 3
 ### Website Resiliency
@@ -182,4 +337,3 @@ You will now need to “recover” the object:
 **Recovered Website:**
 ![Recovered Website](screenshots/s3_delete_revert.png "Recovered Website")
 
-## License
