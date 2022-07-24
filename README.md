@@ -5,7 +5,7 @@ Play a critical role in an organization’s cloud computing strategy as an AWS C
 
 ### Projects
 
-- [Data durability and recovery](./01--Design-for-Availability--Reliability--and-Resiliency)
+- [Data durability and recovery](https://github.com/geekahmed/AWS-Cloud-Architect/tree/main/01.Design%20for%20Availability%2C%20Reliability%2C%20and%20Resiliency)
 - [Design, Provision and Monitor AWS Infrastructure at Scale](#)
 - [Cloud Security - Protecting Resources and Data in the Cloud](#)
 
