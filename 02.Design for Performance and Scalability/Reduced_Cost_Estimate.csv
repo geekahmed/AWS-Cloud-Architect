@@ -1,0 +1,22 @@
+Region,Service,Monthly,First 12 months total,Currency,Configuration summary
+US East (N. Virginia),Amazon EC2,1425.28,17103.36,USD,"Operating system (Linux), Quantity (4), Pricing strategy (EC2 Instance Savings Plans 1 Year No Upfront), Storage amount (30 GB), Instance type (m5.4xlarge)"
+US East (N. Virginia),Amazon RDS for MySQL,3265.296,39183.55,USD,"Storage for each RDS instance (General Purpose SSD (gp2)), Storage amount (30 GB), Quantity (4), Instance type (db.r5.2xlarge), Utilization (On-Demand only) (100 %Utilized/Month), Deployment option (Multi-AZ), Pricing strategy (Reserved 1yr No Upfront)"
+US East (N. Virginia),Amazon Route 53,481.75,5781,USD,"Hosted Zones (1), Number of Elastic Network Interfaces (5), Basic Checks Within AWS (100)"
+US East (N. Virginia),S3 Standard,23,276,USD,S3 Standard storage (1000 GB per month)
+US East (N. Virginia),Data Transfer,0,0,USD,
+US East (N. Virginia),VPN Connection,0,0,USD,Working days per month (22)
+US East (N. Virginia),Network Address Translation (NAT) Gateway,77.85,934.2,USD,Number of NAT Gateways (1)
+US East (N. Virginia),Application Load Balancer,22.27,267.24,USD,Number of Application Load Balancers (1)
+US East (N. Virginia),Network Load Balancer,1111.43,13337.16,USD,"Number of Network Load Balancers (1), Processed bytes per NLB for TCP (150 GB per hour), Processed bytes per NLB for TLS (100 GB per hour), Average TLS connection duration (10 seconds)"
+US East (N. Virginia),Amazon CloudWatch,30,360,USD,Number of Metrics (includes detailed and custom metrics) (100)
+,,,,,
+,Total,6436.876,,,
+,,,,,
+Acknowledgement,,,,,
+"* AWS Pricing Calculator provides only an estimate of your AWS fees and doesn't include any taxes that might apply. Your actual fees depend on a variety of factors, including your actual usage of AWS services.",,,,,
+,,,,,
+,,,,,
+,"- Reducing EC2 Instances to be only 4 instances.
+- Changing RDS pricing strategy to be resrved for 1 year.
+- Route 53 changed number of Elastic Network Instances from 10 to 5.
+- Network Load Balancer - reduces number of processed GB per month (NLB for TCP)",,,,
