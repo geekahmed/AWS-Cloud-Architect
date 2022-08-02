@@ -1,0 +1,7 @@
+# Identify 2-3 changes that can be made to our environment to prevent an ssh brute force attack from the internet.
+1- Deploy the web server to the private subnet.
+2- Remove the SSH ingress rule to the WebAppSG, that is not allowing public internet ssh access.
+3- Remove password login for the SSH.
+# Neither instance should have had access to the secret recipes bucket, in the even that instance API credentials were compromised how could we have prevented access to sensitive data.
+Update S3 policy access to allow read from specific instances.
+Change InstanceRole to only allow read operations to the free recipe bucket.

@@ -1,0 +1,16 @@
+Based on the architecture diagram, and the steps you have taken so far to upload data and access the application web service, identify at least 2 obvious poor practices as it relates to security.  Include justification.
+
+# Poor practice 1
+The web server is deployed in a public subnet. This practice makes it a surface for the attackers to
+get into the instance. A more secure solution is to deploy it in the private subnet and only allow access
+to the LoadBalancer Security Group (AppLoadBalanceSG).
+# Poor practice 2
+The S3 buckets are not ecnrypted using a service like KMS for example. A solution is to use the default
+ecnryption of the S3 service or use a Customer Managed Keys using KMS.
+# Poor practice 3
+The web server security group is allowing all the traffic ingress and egress. It uses a CIDR 0.0.0.0/0
+for allowing the ingress traffic on ports 22, 5000, 80, and -1 (to specify all protocols).
+A solution for this is to allow only the AppLoadBalanceSG to access the port 5000.
+# Poor practice 4
+The InstanceRole has access to all S3 buckets. This practice violates the least previlige best practice.
+Roles should be specific to the list of resources and actions performed upon them.

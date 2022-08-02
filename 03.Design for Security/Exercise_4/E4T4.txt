@@ -1,0 +1,18 @@
+# What additional architectural change can be made to reduce the internet facing attack surface of the web application instance.
+
+1- Transfer the web application server to the private subnet.
+2- Add a NAT Gateway or a Web proxy to control the egress traffic.
+3- Add AWS WAF in order to block the attacks to the CloudFront.
+4- Disallow the ssh access to the instance and use System Manager instead.
+
+# Assuming the IAM permissions for the S3 bucket are still insecure, would creating VPC private endpoints for S3 prevent the unauthorized access to the secrets bucket.
+
+This act will only prevent the internet traffic to the S3 not securing the S3 bucket.
+
+# Will applying default encryption setting to the s3 buckets encrypt the data that already exists?
+
+No. Existing objects will not be affected with the new encryption setting only the new objects get affected.
+
+# What would happen if the original cloud formation templates are applied to this environment.
+
+All made changes will be overriden by the cloudformation file.

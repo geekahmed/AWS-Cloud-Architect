@@ -1,0 +1,16 @@
+Research and analyze which of the vulnerabilities appear to be related to the code that was deployed for the environment in this project.
+- CIS.2.9	Ensure VPC flow logging is enabled in all VPCs
+EC2 VPC: vpc-0465416437ff58c29 (Failed)
+- CIS.2.1   Ensure CloudTrail is enabled in all regions
+CloudTrail is not enabled in the current region
+- CIS.4.1   Ensure no security groups allow ingress from 0.0.0.0/0 to port 22
+EC2 Security Group: AttackInstanceSG (Failed)
+- S3.4 S3 buckets should have server-side encryption enabled
+- securityhub-encrypted-volumes-98327f39 (EC2 volumes are not encrypted)
+
+Bonus - provide recommendations on how to remediate the vulnerabilities.
+1- Enable VPC flow logging.
+2- Enable CloudTrail.
+3- Removing ingress rule for the AttackInstanceSG that allows access to ssh port 22.
+4- Enable server side encryption for the S3 bucket.
+5- Enabling EBS EC2 volumes encryption.

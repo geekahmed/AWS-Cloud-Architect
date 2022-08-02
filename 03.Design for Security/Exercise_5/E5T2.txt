@@ -1,0 +1,28 @@
+# Identify tools that will allow you to do the following:
+
+## Scan infrastructure as code templates
+Regula
+Checkov
+### Example vulnerability
+1- IAM Policies with Full Access "*".
+2- Encryption of S3 is not enabled.
+
+##Scan AMI’s or containers for OS vulnerabilities
+Clair
+Docker Bench
+### Example vulnerability
+1- Using non-descent image or image with vulnerabilities.
+2- Using secret keys in plain text.
+3- Misconfiguration of Docker Volumes.
+
+##Scan an AWS environment for cloud configuration vulnerabilities
+AWS Config
+Intruder
+Astra Pentest
+Cloud Custodian
+Prowler
+Cloudmapper
+### Example vulnerability
+1- Un-Encrypted S3 Buckets.
+2- Changes in IAM Policies and Roles.
+3- Loosely permissve Roles.
