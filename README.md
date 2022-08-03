@@ -6,9 +6,15 @@ Play a critical role in an organization’s cloud computing strategy as an AWS C
 ### Projects
 
 - [Data durability and recovery](https://github.com/geekahmed/AWS-Cloud-Architect/tree/main/01.Design%20for%20Availability%2C%20Reliability%2C%20and%20Resiliency)
-- [Design, Provision and Monitor AWS Infrastructure at Scale](#)
+- [Design, Provision and Monitor AWS Infrastructure at Scale](https://github.com/geekahmed/AWS-Cloud-Architect/tree/main/02.Design%20for%20Performance%20and%20Scalability)
 - [Cloud Security - Protecting Resources and Data in the Cloud](#)
 
 
 ### Certificate
-In progress
+You can find the certificate here: https://confirm.udacity.com/DDGYM2QK
+
+![AWS_Cloud_Architect_Udacity_Cert](AWS_Cloud_Architect_Udacity_Cert.png)
+
+### Contact Me For Help:
+- Email: geekahmed1@gmail.com
+- LinkedIn: https://www.linkedin.com/in/geekahmed

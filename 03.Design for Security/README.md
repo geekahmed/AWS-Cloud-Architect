@@ -108,7 +108,7 @@ Security Hub after reevaluating the number of findings:
 
 ### Design a DevSecOps pipeline
 
-![DevSecOpsPipline](Exercise_5/DevSecOpsPipeline.png)
+![DevSecOpsPipline](Exercise_5/DevSecOpsPipline.png)
 
 
 ### Tools and Documentation
